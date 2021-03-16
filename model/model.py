@@ -17,18 +17,19 @@ class AlexNet(nn.Module):
 		super(AlexNet, self).__init__()
 		# input_size = 224 x 224
 		self.alexnet_rgb = models.alexnet(pretrained=True)
-		self.alexnet_depth = models.alexnet(pretrained=True)
-		self.alexnet_ir = models.alexnet(pretrained=True)
+		# self.alexnet_depth = models.alexnet(pretrained=True)
+		# self.alexnet_ir = models.alexnet(pretrained=True)
 
 		# set_trace()
 		self.fc_combined = self.remove_sequential(self.alexnet_rgb)[-7: -1]
 
 		
 		self.alexnet_rgb = list(self.alexnet_rgb.children())[0]
-		self.alexnet_depth = list(self.alexnet_depth.children())[0]
-		self.alexnet_ir = list(self.alexnet_ir.children())[0]
-		self.output_ch = 256
-		self.conv_1x1 = nn.Conv2d(self.output_ch * 3, self.output_ch, 1, stride=1, padding=0)
+		# self.alexnet_depth = list(self.alexnet_depth.children())[0]
+		# self.alexnet_ir = list(self.alexnet_ir.children())[0]
+		
+		# self.output_ch = 256
+		# self.conv_1x1 = nn.Conv2d(self.output_ch * 3, self.output_ch, 1, stride=1, padding=0)
 		
 		self.avg_pool = nn.AdaptiveAvgPool2d((6, 6))
 		# self.avg_pool = self.modules[1]
@@ -41,18 +42,18 @@ class AlexNet(nn.Module):
 		output_rgb = self.alexnet_rgb(image_rgb)
 		# output_rgb = self.fc_rgb(output_rgb)
 
-		output_depth = self.alexnet_depth(image_depth)
+		# output_depth = self.alexnet_depth(image_depth)
 		# output_depth = self.fc_depth(output_depth)
 
-		output_ir = self.alexnet_ir(image_ir)
+		# output_ir = self.alexnet_ir(image_ir)
 		# output_ir = self.fc_ir(output_ir)
 
-		output_combined = torch.cat((output_rgb, output_depth, output_ir), dim=1)
+		# output_combined = torch.cat((output_rgb, output_depth, output_ir), dim=1)
 		# set_trace()
-		output_combined = self.conv_1x1(output_combined)
+		# output_combined = self.conv_1x1(output_combined)
 		# set_trace()
 		output_combined = self.avg_pool(output_combined)
-		output_combined = torch.reshape(output_combined, (inp_plane, -1))
+		# output_combined = torch.reshape(output_combined, (inp_plane, -1))
 		# for layer in self.fc_combined:
 		# set_trace()
 		output_combined = self.fc_combined(output_combined)

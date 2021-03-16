@@ -15,7 +15,7 @@ from pdb import set_trace
 from model.model import AlexNet, MaximumMeanDiscrepancy, SimilarityEmbedding 
 
 
-from Loadtemporal_BinaryMask_train_3modality import Spoofing_train, Normaliztion, Resize, CenterCrop, ToTensor, RandomHorizontalFlip, Cutout, RandomErasing
+from casia_fasd_train import Spoofing_train, Normaliztion, Resize, CenterCrop, ToTensor, RandomHorizontalFlip, Cutout, RandomErasing
 from Loadtemporal_valtest_3modality import Spoofing_valtest, Resize_val, CenterCrop_val, Normaliztion_valtest, ToTensor_valtest
 
 
@@ -31,11 +31,11 @@ from utils import AvgrageMeter, accuracy, performances
 
 
 # Dataset root
-image_dir = '/home/Disk1T/hxy/CASIA-CeFA/CASIA-CeFA/phase1/'         
+image_dir = '/data1/ziqitang/CBSR/'         
 
-teacher_train_list = '/home/Disk1T/hxy/CASIA-CeFA/CASIA-CeFA/phase1/4@1_train.txt'
-student_train_list = '/home/Disk1T/hxy/CASIA-CeFA/CASIA-CeFA/phase1/4@2_train.txt'
-val_list = '/home/Disk1T/hxy/CASIA-CeFA/CASIA-CeFA/phase1/4@1_dev_ref.txt'
+teacher_train_list = '/data1/xiangyaohuang/train_label.txt'
+# student_train_list = '/home/Disk1T/hxy/CASIA-CeFA/CASIA-CeFA/phase1/4@2_train.txt'
+val_list = '/data1/xiangyaohuang/test_label.txt'
 
    
 # train_list = '/wrk/yuzitong/DONOTREMOVE/CVPRW2020/4@1_train.txt'
@@ -126,9 +126,8 @@ def train_parent():
 
         for i, sample_batched in enumerate(teacher_dataloader_train):
             # get the inputs
-            inputs, binary_mask, spoof_label = sample_batched['image_x'].cuda(), sample_batched['binary_mask'].cuda(), sample_batched['spoofing_label'].cuda() 
-            inputs_ir, inputs_depth = sample_batched['image_ir'].cuda(), sample_batched['image_depth'].cuda()
-            
+            inputs, spoof_label = sample_batched['image_x'].cuda(),  sample_batched['spoofing_label'].cuda() 
+
             
             optimizer.zero_grad()
 
@@ -137,7 +136,7 @@ def train_parent():
             # map_x, embedding, x_Block1, x_Block2, x_Block3, x_input =  model(inputs, inputs_ir, inputs_depth)
             #map_x, embedding, x_Block1, x_Block2, x_Block3, x_input =  model(inputs, inputs_depth)
 
-            output, _ = model(inputs, inputs_depth, inputs_ir)
+            output, _ = model(inputs)
             #pdb.set_trace()
             # absolute_loss = criterion_absolute_loss(map_x, binary_mask)
             # contrastive_loss = criterion_contrastive_loss(map_x, binary_mask)
@@ -195,13 +194,11 @@ def train_parent():
                 # inputs_ir, inputs_depth = sample_batched['image_ir'].cuda(), sample_batched['image_depth'].cuda()
                 # string_name, binary_mask = sample_batched['string_name'], sample_batched['binary_mask'].cuda()
                 
-                inputs, binary_mask, spoof_label = sample_batched['image_x'].cuda(), sample_batched['binary_mask'].cuda(), sample_batched['spoofing_label'].cuda()
-                inputs_ir, inputs_depth = sample_batched['image_ir'].cuda(), sample_batched['image_depth'].cuda()
-                string_name = sample_batched['string_name']
+                inputs, spoof_label = sample_batched['image_x'].cuda(),  sample_batched['spoofing_label'].cuda()
 
                 # optimizer.zero_grad()
                 
-                output, _ = model(inputs, inputs_depth, inputs_ir)
+                output, _ = model(inputs)
 
                 # set_trace()
                 loss = CEloss(output, spoof_label.long())
