@@ -436,5 +436,5 @@ if __name__ == "__main__":
     parser.add_argument('--theta', type=float, default=0.7, help='hyper-parameters in CDCNpp')
 	
     args = parser.parse_args()
-    # train_parent()
-    train_student()
+    train_parent()
+    # train_student()
