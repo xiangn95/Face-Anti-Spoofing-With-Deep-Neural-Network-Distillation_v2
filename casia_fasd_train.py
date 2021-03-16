@@ -229,8 +229,18 @@ class Spoofing_train(Dataset):
         
         image_x = np.zeros((256, 256, 3))
  
-        image_x_temp = cv2.imread(image_path)
+        cap = cv2.VideoCapture(image_path)
         
+        
+        while (cap.isOpened()):
+
+            ret, frame = cap.read()
+
+            if ret:
+                image_x_temp = frame
+                break
+
+        set_trace()
         image_x = cv2.resize(image_x_temp, (256, 256))
         
         image_x_aug = seq.augment_image(image_x) 
