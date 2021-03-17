@@ -16,7 +16,7 @@ from model.model import AlexNet, MaximumMeanDiscrepancy, SimilarityEmbedding
 
 
 from casia_fasd_train import Spoofing_train, Normaliztion, Resize, CenterCrop, ToTensor, RandomHorizontalFlip, Cutout, RandomErasing
-from Loadtemporal_valtest_3modality import Spoofing_valtest, Resize_val, CenterCrop_val, Normaliztion_valtest, ToTensor_valtest
+from casia_fasd_val import Spoofing_valtest, Resize_val, CenterCrop_val, Normaliztion_valtest, ToTensor_valtest
 
 
 import torch.nn.functional as F
@@ -165,7 +165,7 @@ def train_parent():
                 # set_trace()
                 print('epoch:%d, mini-batch:%3d, lr=%f, CE_loss= %.4f, accuracy= %.4f' % (epoch + 1, i + 1, lr,  train_loss_CE.avg, train_accu[i]))
         
-            # break            
+            #break            
         
         # scheduler.step()  
         # whole epoch average
@@ -208,8 +208,8 @@ def train_parent():
 
                 val_accu.append(accuracy(output, spoof_label.long())[0].item())
 
-        print('epoch:%d, Validation: CE_loss= %.4f' % (epoch + 1, val_loss_CE.avg))
-        log_file.write('epoch:%d, Validation: CE_loss= %.4f, accuracy= %.4f' % (epoch + 1, val_loss_CE.avg, sum(train_accu)/len(train_accu)))
+        print('epoch:%d, Validation: CE_loss= %.4f, accuracy=%.4f' % (epoch + 1, val_loss_CE.avg, sum(val_accu)/len(val_accu)))
+        log_file.write('epoch:%d, Validation: CE_loss= %.4f, accuracy= %.4f' % (epoch + 1, val_loss_CE.avg, sum(val_accu)/len(val_accu)))
 
             #     map_score = 0.0
             #     for frame_t in range(inputs.shape[1]):
@@ -428,7 +428,7 @@ if __name__ == "__main__":
     parser.add_argument('--batchsize', type=int, default=9, help='initial batchsize')  #default=9  
     parser.add_argument('--step_size', type=int, default=20, help='how many epochs lr decays once')  # 500  | DPC = 400
     parser.add_argument('--gamma', type=float, default=0.5, help='gamma of optim.lr_scheduler.StepLR, decay of lr')
-    parser.add_argument('--echo_batches', type=int, default=50, help='how many batches display once')  # 50
+    parser.add_argument('--echo_batches', type=int, default=5, help='how many batches display once')  # 50
     parser.add_argument('--epochs', type=int, default=50, help='total training epochs')
     parser.add_argument('--teacher_log', type=str, default="teacher_checkpoints", help='log and save model name')
     parser.add_argument('--student_log', type=str, default="student_checkpoints", help='log and save model name')

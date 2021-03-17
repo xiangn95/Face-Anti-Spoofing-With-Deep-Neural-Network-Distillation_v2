@@ -36,7 +36,7 @@ class AlexNet(nn.Module):
 		
 		self.fc_classifier = nn.Linear(4096, 2)
 
-	def forward(self, image_rgb, image_depth, image_ir):
+	def forward(self, image_rgb):
 		inp_plane = image_rgb.size()[0]
 		
 		output_rgb = self.alexnet_rgb(image_rgb)
@@ -52,10 +52,10 @@ class AlexNet(nn.Module):
 		# set_trace()
 		# output_combined = self.conv_1x1(output_combined)
 		# set_trace()
-		output_combined = self.avg_pool(output_combined)
-		# output_combined = torch.reshape(output_combined, (inp_plane, -1))
+		output_combined = self.avg_pool(output_rgb)
+		output_combined = torch.reshape(output_combined, (inp_plane, -1))
 		# for layer in self.fc_combined:
-		# set_trace()
+		#set_trace()
 		output_combined = self.fc_combined(output_combined)
 
 		output_classify = self.fc_classifier(output_combined)
