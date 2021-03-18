@@ -14,6 +14,7 @@ import math
 import os 
 import imgaug.augmenters as iaa
 
+import argparse
 
 from pdb import set_trace 
 
@@ -197,7 +198,7 @@ class ToTensor(object):
 
 
 
-class Spoofing_train(Dataset):
+class casia_fasd_dataset_train(Dataset):
 
     def __init__(self, info_list, root_dir,  transform=None):
 

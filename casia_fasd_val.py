@@ -96,7 +96,7 @@ class ToTensor_valtest(object):
 
 
 
-class Spoofing_valtest(Dataset):
+class casia_fasd_dataset_val(Dataset):
 
     def __init__(self, info_list, root_dir,  transform=None):
 
